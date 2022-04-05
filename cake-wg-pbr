@@ -1,0 +1,44 @@
+#!/bin/sh /etc/rc.common
+
+exec &> /tmp/cake-wg-pbr.log
+
+START=50
+STOP=4
+
+wan_if=wan # the WAN interface
+vpn_if=vpn # the VPN interface
+
+start() {
+
+	wg_endpoint=$(wg show | awk '{if($1 == "endpoint:"){split($2,a,":"); print a[1]}}')
+
+        # apply CAKE on upload (must be besteffort flows nonat nowash to work with the skb->hash preservation)
+	tc qdisc add dev $wan_if root cake bandwidth 30Mbit besteffort flows nonat nowash no-ack-filter split-gso rtt 100ms noatm overhead 92
+        
+	# ifb interface for handling ingress on WAN (and VPN interface if wg show reports endpoint)
+	ip link add name ifb-wg-pbr type ifb
+        ip link set ifb-wg-pbr up
+
+	# capture all packets on WAN
+        tc qdisc add dev $wan_if handle ffff: ingress
+        tc filter add dev $wan_if parent ffff: prio 2 matchall action mirred egress redirect dev ifb-wg-pbr
+
+	# if 'wg show' reports an endpoint, then pass over wireguard packets on WAN and capture all VPN packets
+	if [ ! -z "$wg_endpoint" ]
+	then
+       		tc filter add dev $wan_if parent ffff: protocol ip prio 1 u32 match ip src ${wg_endpoint}/32 action pass
+       		tc qdisc add dev $vpn_if handle ffff: ingress
+       		tc filter add dev $vpn_if parent ffff: matchall action mirred egress redirect dev ifb-wg-pbr
+	fi
+        # apply CAKE on download using the ifb 
+	tc qdisc add dev ifb-wg-pbr root cake bandwidth 25Mbit besteffort triple-isolate nat wash ingress no-ack-filter split-gso rtt 100ms noatm overhead 92
+}
+
+stop() {
+        tc qdisc del dev $wan_if ingress
+        tc qdisc del dev $wan_if root
+        tc qdisc del dev $vpn_if ingress
+        tc qdisc del dev ifb-wg-pbr root
+        ip link set ifb-wg-pbr down
+        ip link del ifb-wg-pbr
+} 
