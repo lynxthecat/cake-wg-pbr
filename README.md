@@ -3,10 +3,11 @@ Set up CAKE in the context of WireGuard with PBR
 
 ## Required packages
 
-This cake-wg-pbr script supports setting up CAKE with only the following package:
+This cake-wg-pbr script requires at least the following packages:
 
-- **tc-tiny** 
-
+- **tc-tiny**
+- **kmod-ifb**
+- **kmod-sched-cake**
 
 ## Installation on OpenWrt
 
