@@ -7,6 +7,7 @@ This cake-wg-pbr script requires at least the following packages:
 
 - **tc-tiny**
 - **kmod-ifb**
+- **kmod-sched-core**
 - **kmod-sched-cake**
 
 ## Installation on OpenWrt
@@ -14,7 +15,7 @@ This cake-wg-pbr script requires at least the following packages:
 To install:
 
   ```bash
-   opkg update; opkg install tc-tiny
+   opkg update; opkg install tc-tiny kmod-ifb kmod-sched-core kmod-sched-cake
    cd /etc/init.d/
    wget https://raw.githubusercontent.com/lynxthecat/cake-wg-pbr/main/cake-wg-pbr
    chmod +x ./cake-wg-pbr
