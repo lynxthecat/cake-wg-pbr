@@ -1,27 +1,8 @@
 # cake-wg-pbr
-Set up CAKE in the context of WireGuard with PBR
 
-## Required packages
+**Retained here for reference purposes only.**
 
-This cake-wg-pbr script requires at least the following packages:
+**DO NOT USE - use https://github.com/lynxthecat/cake-dual-ifb instead.**
 
-- **tc-tiny**
-- **kmod-ifb**
-- **kmod-sched-core**
-- **kmod-sched-cake**
+See: https://forum.openwrt.org/t/ifbs-in-wireguard-context/134799
 
-## Installation on OpenWrt
-
-To install:
-
-  ```bash
-   opkg update; opkg install tc-tiny kmod-ifb kmod-sched-core kmod-sched-cake
-   cd /etc/init.d/
-   wget https://raw.githubusercontent.com/lynxthecat/cake-wg-pbr/main/cake-wg-pbr
-   chmod +x ./cake-wg-pbr
-   cd /etc/hotplud.g/iface/
-   wget https://raw.githubusercontent.com/lynxthecat/cake-wg-pbr/main/11-cake-wg-pbr
-   chmod +x ./11-cake-wg-pbr
-   ```
-   
-   Set the WAN and VPN interfaces in cake-wg-pbr
