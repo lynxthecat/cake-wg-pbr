@@ -27,7 +27,7 @@ To install:
    cd /etc/init.d/
    wget https://raw.githubusercontent.com/lynxthecat/cake-wg-pbr/main/cake-wg-pbr
    chmod +x ./cake-wg-pbr
-   cd /etc/hotplud.g/iface/
+   cd /etc/hotplug.d/iface/
    wget https://raw.githubusercontent.com/lynxthecat/cake-wg-pbr/main/11-cake-wg-pbr
    chmod +x ./11-cake-wg-pbr
    ```
